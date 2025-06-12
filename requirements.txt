@@ -15,3 +15,14 @@ rouge_score
 nltk 
 rouge-score
 
+# Demo #4
+sacrebleu
+rouge-score
+
+#Demo #5
+ragas
+datasets
+langchain-community
+
+
+
