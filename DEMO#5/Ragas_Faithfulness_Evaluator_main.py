@@ -29,6 +29,10 @@ if __name__ == "__main__":
             ],
         }
         dataset_faithful = Dataset.from_dict(data_faithful)
+        evaluator = RagasFaithfulnessEvaluator(
+            open_ai_api_key, model_name="gpt-4o")
+        # Pass the datasets to the run_evaluation method
+        await evaluator.run_evaluation(dataset_faithful)
 
         # Scenario 2: Answer is NOT faithful (hallucination)
         data_unfaithful = {
@@ -44,9 +48,9 @@ if __name__ == "__main__":
         }
         dataset_unfaithful = Dataset.from_dict(data_unfaithful)
 
-        evaluator = RagasFaithfulnessEvaluator(open_ai_api_key, model_name="gpt-4o")
+        evaluator = RagasFaithfulnessEvaluator(
+            open_ai_api_key, model_name="gpt-4o")
         # Pass the datasets to the run_evaluation method
-        await evaluator.run_evaluation(dataset_faithful, dataset_unfaithful)
+        await evaluator.run_evaluation(dataset_unfaithful)
 
     asyncio.run(main())
-

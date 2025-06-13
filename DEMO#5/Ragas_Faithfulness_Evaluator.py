@@ -5,6 +5,7 @@ from ragas.llms import LangchainLLMWrapper
 from langchain_openai import ChatOpenAI
 import inspect
 
+
 class RagasFaithfulnessEvaluator:
     """
     A class to encapsulate the Ragas faithfulness evaluation logic.
@@ -18,8 +19,8 @@ class RagasFaithfulnessEvaluator:
         Args:
             model_name (str): The name of the OpenAI model to use for evaluation.
         """
-        
-        self.open_ai_api_key =open_ai_api_key
+
+        self.open_ai_api_key = open_ai_api_key
 
         # Initialize the OpenAI LLM for Ragas evaluation
         # Ensure 'langchain-openai' is installed: pip install langchain-openai
@@ -37,39 +38,25 @@ class RagasFaithfulnessEvaluator:
         """
         return await obj if inspect.isawaitable(obj) else obj
 
-    async def run_evaluation(self, dataset_faithful: Dataset, dataset_unfaithful: Dataset):
+    async def run_evaluation(self, dataset: Dataset):
         """
-        Runs the faithfulness evaluation for both faithful and unfaithful scenarios
+        Runs the evaluation for the given data set
         and prints the results.
 
         Args:
-            dataset_faithful (datasets.Dataset): The dataset for the faithful scenario.
-            dataset_unfaithful (datasets.Dataset): The dataset for the unfaithful scenario.
+            dataset (datasets.Dataset): The dataset for the scenario.
         """
-        print("\n--- Evaluating Faithfulness (Faithful Scenario) ---")
+        print(f"\n--- Evaluating the data set ({dataset}) ---")
         # Call evaluate and store the returned object
         eval_return_obj_faithful = evaluate(
-            dataset_faithful, metrics=[self.faithfulness_metric], llm=self.evaluator_llm
+            dataset, metrics=[
+                self.faithfulness_metric], llm=self.evaluator_llm
         )
         print(
             f"Type of object returned by ragas.evaluate (faithful): {type(eval_return_obj_faithful)}"
         )
-        print(f"Is it awaitable? {inspect.isawaitable(eval_return_obj_faithful)}")
+        print(
+            f"Is it awaitable? {inspect.isawaitable(eval_return_obj_faithful)}")
         # Conditionally await the object using the helper function
         result_faithful = await self.maybe_await(eval_return_obj_faithful)
         print(result_faithful)
-
-        print("\n--- Evaluating Faithfulness (Unfaithful Scenario - Hallucination) ---")
-        # Call evaluate and store the returned object
-        eval_return_obj_unfaithful = evaluate(
-            dataset_unfaithful,
-            metrics=[self.faithfulness_metric],
-            llm=self.evaluator_llm,
-        )
-        print(
-            f"Type of object returned by ragas.evaluate (unfaithful): {type(eval_return_obj_unfaithful)}"
-        )
-        print(f"Is it awaitable? {inspect.isawaitable(eval_return_obj_unfaithful)}")
-        # Conditionally await the object using the helper function
-        result_unfaithful = await self.maybe_await(eval_return_obj_unfaithful)
-        print(result_unfaithful)
