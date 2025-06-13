@@ -20,21 +20,20 @@ async def evaluate_context_metrics():
         ],
         "contexts": [
             [
-                "Tokyo is the capital city of Japan and its largest metropolis."
-            ],  # Relevant context
+                # Enhanced context for Q1 to match all details in reference
+                "Tokyo is the capital city of Japan and its largest metropolis and also the largest city."
+                # Added "and also the largest city" to explicitly cover "largest city" from reference
+            ],
             [
-                "Leonardo da Vinci was an Italian polymath who created the Mona Lisa, among other works. The painting is famous for its enigmatic smile."
-            ],  # Relevant context
+                # Enhanced context for Q2 to include the missing dates
+                "Leonardo da Vinci was an Italian polymath who created the Mona Lisa, among other works. The painting is famous for its enigmatic smile. It was painted between 1503 and 1519."
+                # Added "It was painted between 1503 and 1519." to match reference
+            ],
         ],
-        # For ContextRecall, 'reference' needs to be a single string.
-        # This string should represent the ideal answer that the context should contain facts from.
         "reference": [
             "Tokyo is the largest city and capital of Japan.",
             "The Mona Lisa was painted by Leonardo da Vinci between 1503 and 1519.",
         ],
-        # 'ground_truths' is typically used for evaluating the 'answer' field (e.g., with Faithfulness or AnswerRelevance).
-        # It should be a list of lists of strings, where each inner list contains possible correct answers.
-        # For ContextRecall, it's 'reference' that's directly used.
         "ground_truths": [
             [
                 "Tokyo is the largest city and capital of Japan."
