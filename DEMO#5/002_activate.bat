@@ -1,2 +1,3 @@
 @echo off
-.\.venv\Scripts\activate
+REM .\.venv\Scripts\activate
+.\.venv_py311\Scripts\activate

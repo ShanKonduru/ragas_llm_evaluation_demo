@@ -16,9 +16,10 @@ class RagasFaithfulnessEvaluator:
     """
     A class to perform faithfulness evaluation using Ragas with Ollama LLMs and Embeddings.
     """
+
     def __init__(self,
                  logger,
-                 ollama_chat_model_name: str = "llama3.2",
+                 ollama_chat_model_name: str = "phi3:mini",
                  ollama_embedding_model_name: str = "nomic-embed-text",
                  ollama_base_url: str = "http://localhost:11434",
                  ollama_timeout: int = 120):
@@ -32,8 +33,10 @@ class RagasFaithfulnessEvaluator:
         """
         self.ollama_timeout = ollama_timeout
         self.logger = logger
-        self.ollama_chat_model_name = os.getenv("OLLAMA_CHAT_MODEL_NAME", ollama_chat_model_name)
-        self.ollama_embedding_model_name = os.getenv("OLLAMA_EMBEDDING_MODEL_NAME", ollama_embedding_model_name)
+        self.ollama_chat_model_name = os.getenv(
+            "OLLAMA_CHAT_MODEL_NAME", ollama_chat_model_name)
+        self.ollama_embedding_model_name = os.getenv(
+            "OLLAMA_EMBEDDING_MODEL_NAME", ollama_embedding_model_name)
         self.ollama_base_url = os.getenv("OLLAMA_BASE_URL", ollama_base_url)
 
         self.evaluator_llm = None
@@ -45,31 +48,41 @@ class RagasFaithfulnessEvaluator:
         try:
             ollama_chat_model = ChatOllama(
                 model=self.ollama_chat_model_name,
-                temperature=0.0, # Keep temperature low for deterministic evaluations
+                temperature=0.0,  # Keep temperature low for deterministic evaluations
                 base_url=self.ollama_base_url,
-                timeout=self.ollama_timeout # Pass the timeout here
+                timeout=self.ollama_timeout  # Pass the timeout here
             )
             self.evaluator_llm = LangchainLLMWrapper(ollama_chat_model)
-            self.logger.info(f"Ollama Chat LLM ('{self.ollama_chat_model_name}') initialized.")
+            self.logger.info(
+                f"Ollama Chat LLM ('{self.ollama_chat_model_name}') initialized.")
         except Exception as e:
-            self.logger.error(f"Error initializing Ollama Chat LLM ('{self.ollama_chat_model_name}'): {e}")
+            self.logger.error(
+                f"Error initializing Ollama Chat LLM ('{self.ollama_chat_model_name}'): {e}")
             self.logger.error("Please ensure:")
-            self.logger.error(f"1. Ollama server is running (run 'ollama serve' in your terminal).")
-            self.logger.error(f"2. Model '{self.ollama_chat_model_name}' is pulled in Ollama (run 'ollama pull {self.ollama_chat_model_name}').")
+            self.logger.error(
+                f"1. Ollama server is running (run 'ollama serve' in your terminal).")
+            self.logger.error(
+                f"2. Model '{self.ollama_chat_model_name}' is pulled in Ollama (run 'ollama pull {self.ollama_chat_model_name}').")
             self.logger.error("3. 'langchain-community' is installed.")
             raise
 
     async def _initialize_ollama_embeddings(self):
         """Initializes and sets the wrapped Ollama Embeddings."""
         try:
-            ollama_embeddings_model = OllamaEmbeddings(model=self.ollama_embedding_model_name, base_url=self.ollama_base_url)
-            self.evaluator_embeddings = LangchainEmbeddingsWrapper(ollama_embeddings_model)
-            self.logger.info(f"Ollama Embeddings ('{self.ollama_embedding_model_name}') initialized.")
+            ollama_embeddings_model = OllamaEmbeddings(
+                model=self.ollama_embedding_model_name, base_url=self.ollama_base_url)
+            self.evaluator_embeddings = LangchainEmbeddingsWrapper(
+                ollama_embeddings_model)
+            self.logger.info(
+                f"Ollama Embeddings ('{self.ollama_embedding_model_name}') initialized.")
         except Exception as e:
-            self.logger.error(f"Error initializing Ollama Embeddings ('{self.ollama_embedding_model_name}'): {e}")
+            self.logger.error(
+                f"Error initializing Ollama Embeddings ('{self.ollama_embedding_model_name}'): {e}")
             self.logger.error("Please ensure:")
-            self.logger.error(f"1. Ollama server is running (run 'ollama serve' in your terminal).")
-            self.logger.error(f"2. Model '{self.ollama_embedding_model_name}' is pulled in Ollama (run 'ollama pull {self.ollama_embedding_model_name}').")
+            self.logger.error(
+                f"1. Ollama server is running (run 'ollama serve' in your terminal).")
+            self.logger.error(
+                f"2. Model '{self.ollama_embedding_model_name}' is pulled in Ollama (run 'ollama pull {self.ollama_embedding_model_name}').")
             self.logger.error("3. 'langchain-community' is installed.")
             raise
 
@@ -114,7 +127,8 @@ class RagasFaithfulnessEvaluator:
             self.logger.error("Evaluator not set up. Call .setup() first.")
             return {"error": "Evaluator not set up"}
 
-        self.logger.info(f"\n--- Evaluating Faithfulness ({scenario_name}) with Ollama ({self.ollama_chat_model_name}) ---")
+        self.logger.info(
+            f"\n--- Evaluating Faithfulness ({scenario_name}) with Ollama ({self.ollama_chat_model_name}) ---")
         try:
             result = await evaluate(
                 dataset,
@@ -126,10 +140,14 @@ class RagasFaithfulnessEvaluator:
             return result
         except TypeError as e:
             self.logger.error(f"Caught TypeError for {scenario_name}: {e}")
-            self.logger.error("This indicates an issue with `evaluate` not returning an awaitable object.")
-            self.logger.error("Please double-check Ollama server status and model availability.")
-            self.logger.error("Consider upgrading Ragas if this persists, as it likely indicates a version-specific quirk.")
+            self.logger.error(
+                "This indicates an issue with `evaluate` not returning an awaitable object.")
+            self.logger.error(
+                "Please double-check Ollama server status and model availability.")
+            self.logger.error(
+                "Consider upgrading Ragas if this persists, as it likely indicates a version-specific quirk.")
             return {"error": str(e)}
         except Exception as e:
-            self.logger.error(f"An unexpected error occurred for {scenario_name}: {e}")
+            self.logger.error(
+                f"An unexpected error occurred for {scenario_name}: {e}")
             return {"error": str(e)}

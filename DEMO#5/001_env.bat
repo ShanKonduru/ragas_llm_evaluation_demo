@@ -1,2 +1,3 @@
 @echo off
-python -m venv .venv
+REM python -m venv .venv
+C:\Python311\python.exe -m venv .venv_py311
