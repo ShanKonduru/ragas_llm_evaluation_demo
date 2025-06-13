@@ -20,9 +20,9 @@ sacrebleu
 rouge-score
 
 #Demo #5
+dotenv
+pytest
 ragas
 datasets
 langchain-community
-
-
-
+langchain-openai
