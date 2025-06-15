@@ -1,28 +1,11 @@
 # List your project dependencies here
 dotenv
 pytest
-
-# Demo #1
 ragas
 sacrebleu
-
-# Demo #2
 evaluate
 nltk
 rouge_score
-
-# Demo #3
-nltk 
-rouge-score
-
-# Demo #4
-sacrebleu
-rouge-score
-
-#Demo #5
-dotenv
-pytest
-ragas
 datasets
 langchain-community
 langchain-openai

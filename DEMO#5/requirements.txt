@@ -1,9 +1,0 @@
-# List your project dependencies here
-dotenv
-pytest
-
-#Demo #5
-ragas
-datasets
-langchain-community
-langchain-openai
