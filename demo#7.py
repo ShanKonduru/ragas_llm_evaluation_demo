@@ -4,8 +4,19 @@ import asyncio
 from ragas.metrics import ContextRelevance, ContextRecall
 from ragas import evaluate
 from datasets import Dataset
+from ragas.llms import LangchainLLMWrapper
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
+
+open_ai_api_key = os.environ.get("OPENAI_API_KEY")
+if not open_ai_api_key:
+    print("OPENAI_API_KEY='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'")
+    print("OPENAI_API_KEY not found. Please set it in your .env file or environment variables.")
+    exit(1)
+
+evaluator_llm = LangchainLLMWrapper(ChatOpenAI(
+    model="gpt-4o", openai_api_key=open_ai_api_key))
 
 # Initialize Ragas metrics globally or within functions if preferred
 # Initializing here avoids re-instantiating them if they don't hold state
@@ -49,7 +60,7 @@ async def evaluate_positive_scenarios():
 
     results = evaluate(
         dataset_positive, metrics=[
-            context_relevancy_metric, context_recall_metric]
+            context_relevancy_metric, context_recall_metric], llm=evaluator_llm
     )
     print(results)
 
@@ -116,7 +127,7 @@ async def evaluate_negative_scenarios():
 
     results = evaluate(
         dataset_negative, metrics=[
-            context_relevancy_metric, context_recall_metric]
+            context_relevancy_metric, context_recall_metric], llm=evaluator_llm
     )
     print(results)
 
