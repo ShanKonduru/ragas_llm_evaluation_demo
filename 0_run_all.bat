@@ -18,7 +18,7 @@ for %%f in (%LIST_OF_BATS_TO_RUN%) do (
     rem '/wait' ensures run_all.bat waits for the new window process to close.
     rem 'cmd /k' keeps the new command window open after the batch file finishes.
     rem The title of the new window will be the batch file name.
-    start "Running: %%~nf" /wait cmd /k call "%%f"
+    start "Running: %%~nf" cmd /k call "%%f"
     echo.
 )
 
